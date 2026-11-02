@@ -57,6 +57,20 @@ Check it took: in a new chat, ask what the source-analysis skill does.
 
 ### Claude Code
 
+```
+/plugin install source-analysis --marketplace elisesfdc/source-analysis
+```
+
+On Claude Code 2.1.275 or later that's one step. On older versions, add the marketplace
+first, then install:
+
+```
+/plugin marketplace add elisesfdc/source-analysis
+/plugin install source-analysis@source-analysis-marketplace
+```
+
+Or clone it straight into your skills folder and skip plugins altogether:
+
 ```bash
 git clone https://github.com/elisesfdc/source-analysis.git ~/.claude/skills/source-analysis
 ```

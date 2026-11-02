@@ -1,0 +1,18 @@
+{
+  "name": "source-analysis-marketplace",
+  "description": "Source data analysis for CSV extracts headed into Salesforce — structure and findings only, never the client's data.",
+  "owner": {
+    "name": "elisesfdc",
+    "url": "https://github.com/elisesfdc"
+  },
+  "plugins": [
+    {
+      "name": "source-analysis",
+      "source": ".",
+      "description": "Scan a folder of CSV files from any source database into a five-tab Excel analysis workbook: findings, intake questions, table classification, key map and schema. The script runs locally; Claude only reads the workbook.",
+      "version": "1.0.0",
+      "category": "data",
+      "tags": ["salesforce", "data-migration", "csv", "excel", "crm"]
+    }
+  ]
+}
