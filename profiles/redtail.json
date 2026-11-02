@@ -1,0 +1,766 @@
+{
+  "name": "RedTail CRM",
+  "source_system": "RedTail CRM (SQL backup exported to CSV via Navicat)",
+  "target_system": "Salesforce Financial Services Cloud",
+  "deletion_columns": {
+    "timestamp": [
+      "deleted_at",
+      "deleted_on",
+      "date_deleted",
+      "removed_at"
+    ],
+    "boolean": [
+      "deleted",
+      "is_deleted",
+      "isdeleted"
+    ]
+  },
+  "not_fk_columns": [
+    "account_number_id",
+    "external_id",
+    "federal_id",
+    "global_id",
+    "legacy_id",
+    "rep_id",
+    "ssn_id",
+    "tax_id",
+    "temp_id"
+  ],
+  "user_columns": [
+    "added_by",
+    "assigned_to",
+    "assigned_user_id",
+    "attendee_id",
+    "author_id",
+    "completed_by",
+    "created_by",
+    "modified_by",
+    "owner_id",
+    "servicing_user_id",
+    "updated_by",
+    "user_id"
+  ],
+  "not_user_columns": [
+    "referred_by"
+  ],
+  "generic_stems": [
+    "category",
+    "code",
+    "detail",
+    "kind",
+    "role",
+    "stage",
+    "status",
+    "type"
+  ],
+  "audit_columns": [
+    "archived",
+    "archived_at",
+    "created_at",
+    "created_on",
+    "global_id",
+    "modified_at",
+    "recycle_delete",
+    "temp_id",
+    "updated_at",
+    "updated_on"
+  ],
+  "type_table_map": {
+    "crm::contact": "contacts",
+    "crm::account": "accounts",
+    "crm::activity": "activities",
+    "crm::note": "notes",
+    "crm::document": "documents",
+    "crm::opportunity": "opportunities",
+    "crm::seminar": "seminars",
+    "crm::user": "__users__",
+    "user": "__users__"
+  },
+  "fk_overrides": {
+    "contacts.business_id": [
+      "contacts",
+      "accounts"
+    ],
+    "contacts.category_id": [
+      "contact_categories",
+      "categories"
+    ],
+    "activities.category_id": [
+      "categories",
+      "activity_categories",
+      "contact_categories"
+    ],
+    "status_id": [
+      "contact_statuses",
+      "account_statuses",
+      "opportunity_stages"
+    ],
+    "salutation_id": [
+      "contact_salutations"
+    ],
+    "family_id": [
+      "contact_families"
+    ],
+    "membership_code_id": [
+      "contact_membership_codes"
+    ],
+    "code_id": [
+      "activity_codes"
+    ],
+    "activity_code_id": [
+      "activity_codes"
+    ],
+    "stage_id": [
+      "opportunity_stages"
+    ],
+    "keyword_id": [
+      "keywords"
+    ],
+    "tag_id": [
+      "tags"
+    ],
+    "contact_memberships.member_id": [
+      "contacts"
+    ],
+    "contact_professionals.professional_contact_id": [
+      "contacts"
+    ],
+    "tag_group_id": [
+      "tag_groups"
+    ],
+    "udf_field_id": [
+      "contact_udf_fields",
+      "account_udf_fields"
+    ],
+    "udf_id": [
+      "contact_udfs",
+      "account_udfs"
+    ],
+    "parent_id": [
+      "__self__"
+    ]
+  },
+  "fk_override_notes": {
+    "contacts.business_id": "Playbook doc says accounts.csv; confirm whether this points at a business CONTACT (contacts.id) or a financial account.",
+    "contacts.category_id": "RedTail ships both categories.csv and contact_categories.csv; the empirical check decides which one contacts actually use."
+  },
+  "system_tables": [
+    "contact_sharefile_folders",
+    "copytalk_messages",
+    "custom_export_fields",
+    "dropbox_files",
+    "favorites",
+    "permissions",
+    "quicklists",
+    "table_event_associations"
+  ],
+  "entity_tables": [
+    "accounts",
+    "activities",
+    "contact_families",
+    "contacts",
+    "documents",
+    "notes",
+    "opportunities",
+    "seminars"
+  ],
+  "ui_location_label": "RedTail UI Location",
+  "tables": {
+    "contacts": {
+      "description": "Business and individual contacts (type = Crm::Contact::Individual / Business / Trust / ContactAssociation)",
+      "target": "Person Account (individuals) · Business Account (businesses, trusts, associations)",
+      "included": "Included",
+      "ui": "Contact record → Contact Overview / Contact Card"
+    },
+    "accounts": {
+      "description": "Financial accounts held by contacts",
+      "target": "Financial Account",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Accounts",
+      "gated_by": "Financial accounts source"
+    },
+    "account_details": {
+      "description": "Detail attributes of financial accounts",
+      "target": "Financial Account (child detail)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Accounts → account detail",
+      "gated_by": "Financial accounts source"
+    },
+    "account_owners": {
+      "description": "Joins financial accounts to their owning contacts",
+      "target": "Financial Account Role",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Accounts",
+      "gated_by": "Financial accounts source"
+    },
+    "account_sams": {
+      "description": "Suitability / SAMS data on financial accounts",
+      "target": "Not migrating",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Accounts",
+      "gated_by": "Financial accounts source"
+    },
+    "account_types": {
+      "description": "Lookup: financial account types",
+      "target": "Financial Account — Type picklist",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists",
+      "gated_by": "Financial accounts source"
+    },
+    "account_udfs": {
+      "description": "User-defined field definitions for accounts",
+      "target": "Custom fields (if used)",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists → UDFs",
+      "gated_by": "Financial accounts source"
+    },
+    "account_udf_fields": {
+      "description": "UDF field definitions (accounts)",
+      "target": "Custom fields (if used)",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists → UDFs",
+      "gated_by": "Financial accounts source"
+    },
+    "account_udf_field_values": {
+      "description": "UDF values on accounts",
+      "target": "Custom fields (if used)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Accounts → UDFs",
+      "gated_by": "Financial accounts source"
+    },
+    "activities": {
+      "description": "Activities — need to differentiate Tasks vs Events",
+      "target": "Task / Event",
+      "included": "Included",
+      "ui": "Contact record → Activities; Calendar"
+    },
+    "activities_contacts": {
+      "description": "Joins activities to contacts",
+      "target": "Task/Event WhoId · WhatId (household)",
+      "included": "Included",
+      "ui": "Contact record → Activities"
+    },
+    "activity_attendees": {
+      "description": "Additional user attendees on an activity",
+      "target": "Event attendees / Task assignment",
+      "included": "To Be Reviewed",
+      "ui": "Activity → Attendees"
+    },
+    "activity_codes": {
+      "description": "Lookup: activity code (like Salesforce Type)",
+      "target": "Task/Event Type picklist",
+      "included": "Included",
+      "ui": "Manage Your Account → Database Lists → Activity Codes"
+    },
+    "activity_completed_instances": {
+      "description": "Completion records — distinguishes completed tasks",
+      "target": "Task Status = Completed",
+      "included": "To Be Reviewed",
+      "ui": "Activity → Completed"
+    },
+    "activity_associations": {
+      "description": "Activity-to-record associations",
+      "target": "Task/Event WhatId",
+      "included": "To Be Reviewed",
+      "ui": "Activity → linked records"
+    },
+    "addresses": {
+      "description": "Contact/account addresses (polymorphic)",
+      "target": "Account Billing/Mailing/Shipping Address + Additional Detail",
+      "included": "Included",
+      "ui": "Contact record → Contact Card → Addresses",
+      "article": "https://support.redtailtechnology.com/s/article/Contact-Overview-Primary-VS-Preferred"
+    },
+    "emails": {
+      "description": "Email addresses (polymorphic)",
+      "target": "Email / Business Email + Additional Detail",
+      "included": "Included",
+      "ui": "Contact record → Contact Card → Email Addresses",
+      "article": "https://support.redtailtechnology.com/s/article/Contact-Overview-Primary-VS-Preferred"
+    },
+    "phones": {
+      "description": "Phone numbers (polymorphic)",
+      "target": "Phone / Mobile / Work Phone + Additional Detail",
+      "included": "Included",
+      "ui": "Contact record → Contact Card → Phone Numbers",
+      "article": "https://support.redtailtechnology.com/s/article/Contact-Overview-Primary-VS-Preferred"
+    },
+    "categories": {
+      "description": "Lookup: categories (verify which object uses it — contacts or activities)",
+      "target": "TBD",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists"
+    },
+    "contact_categories": {
+      "description": "Lookup: contact category (numerical reference from contacts.category_id)",
+      "target": "FinServ__ClientCategory__c or client-specific rating field",
+      "included": "Included",
+      "ui": "Contact record → Contact Overview → Category"
+    },
+    "contact_statuses": {
+      "description": "Lookup: contact status (contacts.status_id)",
+      "target": "FinServ__Status__c / Relationship_Status__c",
+      "included": "Included",
+      "ui": "Contact record → Contact Overview → Status"
+    },
+    "contact_salutations": {
+      "description": "Lookup: salutation (contacts.salutation_id)",
+      "target": "Salutation",
+      "included": "Included",
+      "ui": "Contact record → Contact Overview → Name"
+    },
+    "sources": {
+      "description": "Lookup: lead source (contacts.source_id)",
+      "target": "PersonLeadSource (Lead and Referral Source)",
+      "included": "Included",
+      "ui": "Contact record → Contact Overview → Source"
+    },
+    "servicing_advisors": {
+      "description": "Lookup: servicing advisor (contacts.servicing_advisor_id)",
+      "target": "Servicing_Advisor__c (picklist) or User lookup — INTAKE",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Contact Overview → Servicing Advisor"
+    },
+    "writing_advisors": {
+      "description": "Lookup: writing advisor (contacts.writing_advisor_id)",
+      "target": "Writing_Advisor__c (picklist) or User lookup — INTAKE",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Contact Overview → Writing Advisor"
+    },
+    "contact_families": {
+      "description": "Families — equivalent to Salesforce Household accounts",
+      "target": "Account (Household record type)",
+      "included": "Included",
+      "ui": "Contact record → Family / Households"
+    },
+    "contact_family_members": {
+      "description": "Joins contacts to families; carries head-of-household flag",
+      "target": "AccountContactRelation (household membership, primary flag)",
+      "included": "Included",
+      "ui": "Contact record → Family → Members"
+    },
+    "contact_famiy_members": {
+      "description": "Joins contacts to families; carries head-of-household flag (RedTail's misspelled file name)",
+      "target": "AccountContactRelation (household membership, primary flag)",
+      "included": "Included",
+      "ui": "Contact record → Family → Members"
+    },
+    "contact_memberships": {
+      "description": "Contact-to-contact relationships (spouse, sibling, attorney …)",
+      "target": "FinServ__ContactContactRelation__c (needs reciprocal role map)",
+      "included": "Included",
+      "ui": "Contact record → Memberships"
+    },
+    "contact_membership_codes": {
+      "description": "Lookup: membership relationship codes (Head of Household, Spouse, Sister …)",
+      "target": "FinServ__ReciprocalRole__c",
+      "included": "Included",
+      "ui": "Manage Your Account → Database Lists → Membership Codes"
+    },
+    "keywords": {
+      "description": "Lookup: keywords used to tag contacts",
+      "target": "Campaign (one per keyword the client keeps)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Misc Client Info → Keywords",
+      "article": "https://support.redtailtechnology.com/s/article/Know-Your-Client-Misc-Client-Info"
+    },
+    "contact_keywords": {
+      "description": "Joins contacts to keywords (many-to-many)",
+      "target": "CampaignMember (Status = Sent)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Misc Client Info → Keywords",
+      "article": "https://support.redtailtechnology.com/s/article/Know-Your-Client-Misc-Client-Info"
+    },
+    "tags": {
+      "description": "Lookup: tags",
+      "target": "Campaign (same pattern as keywords)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Tags"
+    },
+    "tag_groups": {
+      "description": "Lookup: tag groups",
+      "target": "Campaign parent / Campaign Type",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Tag Groups"
+    },
+    "contact_tags": {
+      "description": "Joins contacts to tags",
+      "target": "CampaignMember (same pattern as keywords)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Tags"
+    },
+    "contact_important_informations": {
+      "description": "Free-text important information per contact",
+      "target": "Key Notes / Description",
+      "included": "Included",
+      "ui": "Contact record → Know Your Client → Important Information"
+    },
+    "contact_personal_profiles": {
+      "description": "KYC personal profile: review schedule / Next Review At, estimated net worth (enw_*), misc personal info (maiden name, birthplace, citizenship), health info. Check Schema populated % — often only the review fields carry data.",
+      "target": "Next Annual Review Meeting date (other fields only where populated)",
+      "included": "Included",
+      "ui": "Contact record → Know Your Client → Client Review Reminder / Personal Profile",
+      "article": "https://support.redtailtechnology.com/s/article/Personal-Profile-Form"
+    },
+    "contact_identifications": {
+      "description": "Forms of ID (type, number, state, issue/expiration)",
+      "target": "FinServ__IdentificationDocument__c (if data present)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Misc Client Info → Identification",
+      "article": "https://support.redtailtechnology.com/s/article/Know-Your-Client-Misc-Client-Info"
+    },
+    "contact_primary_contacts": {
+      "description": "Primary contact person for a client",
+      "target": "Use the Primary flags on emails/phones/addresses instead",
+      "included": "Not Applicable",
+      "ui": "Contact record → Know Your Client → Misc Client Info → Primary Contact",
+      "article": "https://support.redtailtechnology.com/s/article/Know-Your-Client-Misc-Client-Info"
+    },
+    "contact_interests": {
+      "description": "Personal interests text",
+      "target": "Not migrating (unless requested)",
+      "included": "Not Applicable",
+      "ui": "Contact record → Know Your Client → Misc Client Info → Personal Interests",
+      "article": "https://support.redtailtechnology.com/s/article/Know-Your-Client-Misc-Client-Info"
+    },
+    "interests": {
+      "description": "Lookup: interests",
+      "target": "Not migrating (unless requested)",
+      "included": "Not Applicable",
+      "ui": "Contact record → Know Your Client → Misc Client Info → Personal Interests"
+    },
+    "contact_employments": {
+      "description": "Employment records (employer, occupation, dates)",
+      "target": "FinServ__Employment__c / Employer fields",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Professional"
+    },
+    "professions": {
+      "description": "Lookup: professions",
+      "target": "Occupation picklist",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Professional"
+    },
+    "contact_professionals": {
+      "description": "Professional contacts (attorney, CPA …) linked to a client",
+      "target": "Contact-Contact Relationship or Referred By",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Professional → Professional Contacts"
+    },
+    "contact_roles": {
+      "description": "Advisor / Associate Advisor / CSA relationships to contacts",
+      "target": "Account Team / User lookups",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Contact Overview → Roles"
+    },
+    "contact_sams": {
+      "description": "Suitability data (objective, time horizon, risk tolerance, experience)",
+      "target": "FinServ__ financial goals / custom fields",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Suitability"
+    },
+    "objectives": {
+      "description": "Lookup: investment objectives (contact_sams.objective_id)",
+      "target": "Picklist (if SAMS migrates)",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Know Your Client → Suitability"
+    },
+    "contact_advisor_details": {
+      "description": "Advisor detail attributes",
+      "target": "TBD",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Contact Overview"
+    },
+    "contact_social_media": {
+      "description": "Social media profile URLs",
+      "target": "Custom URL fields (if requested)",
+      "included": "Not Applicable",
+      "ui": "Contact record → Contact Card → Social Media"
+    },
+    "contact_urls": {
+      "description": "Website URLs",
+      "target": "Website",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Contact Card → Websites"
+    },
+    "contact_udfs": {
+      "description": "User-defined field definitions (contacts)",
+      "target": "Custom fields (if used) — INTAKE",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists → UDFs"
+    },
+    "contact_udf_fields": {
+      "description": "UDF field definitions (contacts)",
+      "target": "Custom fields (if used) — INTAKE",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists → UDFs"
+    },
+    "contact_udf_field_values": {
+      "description": "UDF values on contacts",
+      "target": "Custom fields (if used) — INTAKE",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → UDFs"
+    },
+    "contact_wars": {
+      "description": "Unknown — inspect column list",
+      "target": "TBD",
+      "included": "To Be Reviewed",
+      "ui": "Not yet documented"
+    },
+    "contact_opportunities": {
+      "description": "Joins contacts to opportunities",
+      "target": "Opportunity Contact Role",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Opportunities"
+    },
+    "opportunities": {
+      "description": "Opportunities",
+      "target": "Opportunity",
+      "included": "To Be Reviewed",
+      "ui": "Opportunities"
+    },
+    "opportunity_stages": {
+      "description": "Lookup: opportunity stages",
+      "target": "Opportunity StageName picklist",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists → Opportunity Stages"
+    },
+    "opportunity_types": {
+      "description": "Lookup: opportunity types",
+      "target": "Opportunity Type picklist",
+      "included": "To Be Reviewed",
+      "ui": "Manage Your Account → Database Lists → Opportunity Types"
+    },
+    "notes": {
+      "description": "Notes on contacts (body may contain embedded newlines)",
+      "target": "ContentNote via placeholder object, or completed Task — INTAKE",
+      "included": "Included",
+      "ui": "Contact record → Notes"
+    },
+    "note_associations": {
+      "description": "Joins notes to records",
+      "target": "Note parent (ContentDocumentLink) / Task WhoId",
+      "included": "Included",
+      "ui": "Contact record → Notes"
+    },
+    "comments": {
+      "description": "Comments on notes/activities",
+      "target": "Appended to note/task body",
+      "included": "To Be Reviewed",
+      "ui": "Note / Activity → Comments"
+    },
+    "documents": {
+      "description": "Document metadata; files live in the separate Imaging backup",
+      "target": "Salesforce Files (ContentVersion) — requires Imaging backup",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Documents",
+      "article": "https://support.redtailtechnology.com/s/article/NEW-How-can-I-back-up-my-Imaging-account"
+    },
+    "document_associations": {
+      "description": "Joins documents to records",
+      "target": "ContentDocumentLink",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Documents"
+    },
+    "seminars": {
+      "description": "Seminars / events",
+      "target": "Campaign (Type = Seminar)",
+      "included": "To Be Reviewed",
+      "ui": "Seminars"
+    },
+    "seminar_attendees": {
+      "description": "Joins contacts to seminars",
+      "target": "CampaignMember",
+      "included": "To Be Reviewed",
+      "ui": "Seminars → Attendees"
+    },
+    "departments": {
+      "description": "Lookup: departments",
+      "target": "Department / custom picklist",
+      "included": "To Be Reviewed",
+      "ui": "Contact record → Departments"
+    },
+    "permissions": {
+      "description": "RedTail user/record permissions",
+      "target": "Not migrating",
+      "included": "Not Applicable",
+      "ui": "Manage Your Account → Users & Teams"
+    },
+    "quicklists": {
+      "description": "Saved quick lists (UI feature)",
+      "target": "Not migrating (List Views rebuilt manually)",
+      "included": "Not Applicable",
+      "ui": "Quicklists"
+    },
+    "custom_export_fields": {
+      "description": "Export configuration",
+      "target": "Not migrating",
+      "included": "Not Applicable",
+      "ui": "Exports"
+    },
+    "favorites": {
+      "description": "User favorites (UI feature)",
+      "target": "Not migrating",
+      "included": "Not Applicable",
+      "ui": "Favorites"
+    },
+    "table_event_associations": {
+      "description": "System event associations",
+      "target": "Not migrating",
+      "included": "Not Applicable",
+      "ui": "System"
+    },
+    "copytalk_messages": {
+      "description": "CopyTalk dictation messages",
+      "target": "Not migrating",
+      "included": "Not Applicable",
+      "ui": "CopyTalk integration"
+    },
+    "dropbox_files": {
+      "description": "Dropbox integration file links",
+      "target": "Not migrating",
+      "included": "Not Applicable",
+      "ui": "Dropbox integration"
+    },
+    "contact_sharefile_folders": {
+      "description": "ShareFile integration folders",
+      "target": "Not migrating",
+      "included": "Not Applicable",
+      "ui": "ShareFile integration"
+    }
+  },
+  "intake": [
+    {
+      "topic": "Existing Salesforce data",
+      "question": "Are there already client records in the target org (e.g. pushed in by ClientWorks or another integration)?",
+      "why": "If yes, RedTail contacts must be MATCHED to existing Person Accounts / Businesses instead of inserted, or the migration creates duplicates.",
+      "default": "Yes — nearly every FSC engagement",
+      "drives": "contacts"
+    },
+    {
+      "topic": "Financial accounts source",
+      "question": "Will RedTail Accounts (accounts.csv) be migrated as Financial Accounts, or do Financial Accounts arrive from ClientWorks / another integration?",
+      "why": "First-order scope decision. In ~99% of RT→FSC migrations financial accounts come from the integration, so accounts.csv and every account_* table drop out of scope.",
+      "default": "No — not migrating from RedTail",
+      "drives": "accounts, account_details, account_owners, account_sams, account_types, account_udfs, account_udf_fields, account_udf_field_values"
+    },
+    {
+      "topic": "Target FSC data model",
+      "question": "Which FSC data model does the target org run — the FinServ__ managed package, FSC-on-Core (Financial Account Management Standard Objects), or both (hybrid)?",
+      "why": "Every target field API name in steps 4-5 depends on this: FinServ__TaxId__pc, ContactContactRelation + ReciprocalRole vs. PartyRoleRelation, Household record type vs. PartyRelationshipGroup, financial-account structure. Detect via the sobject-reads MCP connector; hybrid orgs must confirm ONE model (see fsc-target-model.md).",
+      "default": "Detect via MCP connector — most existing FSC orgs are managed package",
+      "drives": "contacts, contact_memberships, contact_membership_codes, contact_families, contact_family_members, accounts, account_* tables",
+      "options": [
+        "Managed package",
+        "FSC-on-Core",
+        "Hybrid",
+        "Undecided"
+      ]
+    },
+    {
+      "topic": "Match key for existing records",
+      "question": "Which key identifies an existing Salesforce record for a RedTail contact?",
+      "why": "Drives the local Tax-ID match step (Data Loader export of Account Id / LegacyId__c / FinServ__TaxId__pc / business Tax ID, matched locally — Claude sees counts only).",
+      "default": "Tax ID (FinServ__TaxId__pc for persons; business Tax ID field for businesses)",
+      "drives": "contacts"
+    },
+    {
+      "topic": "Contact model & record types",
+      "question": "Individuals → Person Account? Businesses / Trusts / ContactAssociations → Business Account? Confirm record type names.",
+      "why": "Determines the Persons / Businesses split and the RecordTypeName written into load files.",
+      "default": "Individual → PersonAccount · Business/Trust/ContactAssociation → IndustriesBusiness",
+      "drives": "contacts"
+    },
+    {
+      "topic": "Households",
+      "question": "Create Households from contact_families? Naming convention? Also create households for persons with no RedTail family?",
+      "why": "Households are required for FSC rollups; head-of-household flag becomes the primary ACR.",
+      "default": "Yes — one household per family; one per unfamilied person",
+      "drives": "contact_families, contact_family_members"
+    },
+    {
+      "topic": "Keywords",
+      "question": "Migrate keywords as Campaigns with Campaign Members? Which keywords does the client want to keep?",
+      "why": "Keywords are how RedTail users tag contacts; Campaigns preserve the grouping. Campaign Members must be persons, not businesses.",
+      "default": "Yes — client selects keywords from the usage-count list",
+      "drives": "keywords, contact_keywords"
+    },
+    {
+      "topic": "Tags & tag groups",
+      "question": "Apply the same Campaign / Campaign Member pattern to tags and tag groups?",
+      "why": "Same structure as keywords; confirm whether tag tables even appear in this extract.",
+      "default": "Yes — same as keywords",
+      "drives": "tags, tag_groups, contact_tags"
+    },
+    {
+      "topic": "User-defined fields (UDFs)",
+      "question": "Does the client actively use UDFs on contacts or accounts?",
+      "why": "Each used UDF becomes a custom field decision; unused UDF tables drop out of scope.",
+      "default": "Ask — often unused",
+      "drives": "contact_udfs, contact_udf_fields, contact_udf_field_values, account_udfs, account_udf_fields, account_udf_field_values"
+    },
+    {
+      "topic": "Notes destination",
+      "question": "Load notes as Salesforce Notes (ContentNote via placeholder object) or as completed Tasks?",
+      "why": "Changes the load path entirely; note dates cannot be back-stamped on ContentNote so they go into the subject.",
+      "default": "ContentNote (via note placeholder object)",
+      "drives": "notes, note_associations, comments"
+    },
+    {
+      "topic": "Activities",
+      "question": "Migrate activities? Only those related to a contact/business? Rule for Task vs Event?",
+      "why": "Unrelated / personal activities typically are not migrated; all-day items often should be Tasks.",
+      "default": "Yes — only activities with a related contact; related to the household too",
+      "drives": "activities, activities_contacts, activity_attendees, activity_codes, activity_completed_instances"
+    },
+    {
+      "topic": "Documents / Imaging backup",
+      "question": "Has the client requested the Imaging (attachments) backup from RedTail support?",
+      "why": "documents.csv is metadata only; without the Imaging backup no files can be migrated.",
+      "default": "Request it on day one",
+      "drives": "documents, document_associations"
+    },
+    {
+      "topic": "RedTail users list",
+      "question": "Has the manual users list (id, name, email, username, Active/Disabled) been captured from Manage Database Users & Teams?",
+      "why": "The backup has no users table; added_by / user_id / attendee columns are unresolvable without it. See the Key Map for every column that needs it.",
+      "default": "Capture on the day the backup is taken",
+      "drives": "all tables with user-reference columns"
+    },
+    {
+      "topic": "Servicing / writing advisor",
+      "question": "Store advisors as a picklist field or as a User lookup?",
+      "why": "Picklist needs no user records; User lookup needs an active or inactive user per advisor.",
+      "default": "Ask — picklist is simplest",
+      "drives": "servicing_advisors, writing_advisors, contact_roles"
+    },
+    {
+      "topic": "Contact memberships",
+      "question": "Migrate contact_memberships as Contact-Contact Relationships? Provide the reciprocal role map.",
+      "why": "Each relationship needs source role + inverse role ids; self-relationships error out.",
+      "default": "Yes — build the Reciprocal Role Map early",
+      "drives": "contact_memberships, contact_membership_codes"
+    },
+    {
+      "topic": "Phones, emails, addresses",
+      "question": "Which types map to standard fields, and does everything else go to an Additional Details object?",
+      "why": "Standard: home/work/mobile phone, email 1/2, address type 1 → Billing, type 2 → Mailing/Shipping.",
+      "default": "Standard fields + all records into Additional Details",
+      "drives": "phones, emails, addresses"
+    },
+    {
+      "topic": "Custom fields to create",
+      "question": "Confirm custom fields for RedTail-only data: referred_by, client_termination_date, dob_reminder, death date, nickname, designation, pronunciation.",
+      "why": "Populated-% on the Schema tab shows which of these carry data worth a field.",
+      "default": "Create only where populated % is material",
+      "drives": "contacts"
+    },
+    {
+      "topic": "Deleted records",
+      "question": "Exclude records where deleted = true (and archived) everywhere?",
+      "why": "Standard rule; the Non-Deleted counts on this workbook already apply it.",
+      "default": "Yes — always",
+      "drives": "all tables"
+    }
+  ]
+}

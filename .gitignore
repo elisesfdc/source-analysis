@@ -1,0 +1,12 @@
+# never commit client data or deliverables
+*.xlsx
+*.csv
+!profiles/*.json
+01_Source_Extract/
+02_Analysis_Workbooks/
+_source-analysis-tool/
+
+__pycache__/
+*.pyc
+.DS_Store
+.venv/

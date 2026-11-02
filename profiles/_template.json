@@ -1,0 +1,84 @@
+{
+  "name": "My Source System",
+  "source_system": "My Source System v1 (exported to CSV)",
+  "target_system": "Salesforce",
+  "deletion_columns": {
+    "timestamp": [],
+    "boolean": []
+  },
+  "not_fk_columns": [
+    "columns ending in _id that are NOT keys, e.g. tax_id"
+  ],
+  "user_columns": [
+    "columns holding a user id that the generic rules miss"
+  ],
+  "not_user_columns": [
+    "columns that look like user references but are free text, e.g. referred_by"
+  ],
+  "users_table": "",
+  "type_table_map": {
+    "App::Contact": "contacts"
+  },
+  "fk_overrides": {
+    "orders.cust_ref": [
+      "customers"
+    ],
+    "status_id": [
+      "order_statuses",
+      "statuses"
+    ]
+  },
+  "fk_override_notes": {
+    "orders.cust_ref": "Why this override exists / open question"
+  },
+  "system_tables": [
+    "settings",
+    "permissions"
+  ],
+  "entity_tables": [
+    "customers",
+    "orders"
+  ],
+  "ui_location_label": "Source UI Location",
+  "tables": {
+    "customers": {
+      "description": "Customer master",
+      "target": "Account",
+      "included": "Included",
+      "ui": "Customers screen",
+      "article": ""
+    },
+    "invoices": {
+      "description": "Invoices",
+      "target": "Custom object Invoice__c",
+      "included": "To Be Reviewed",
+      "gated_by": "Invoices in scope"
+    }
+  },
+  "intake": [
+    {
+      "topic": "Invoices in scope",
+      "question": "Migrate invoices?",
+      "why": "Largest table; often stays in the ERP.",
+      "default": "No",
+      "drives": "invoices, invoice_lines",
+      "gates_tables": [
+        "invoices",
+        "invoice_lines"
+      ]
+    },
+    {
+      "topic": "Target data model",
+      "question": "Which data model?",
+      "why": "Drives every mapping.",
+      "default": "Detect from org",
+      "drives": "all",
+      "options": [
+        "Standard",
+        "Custom",
+        "Undecided"
+      ]
+    }
+  ],
+  "_notes": "Every key is optional. 'intake' REPLACES the generic intake when present. Table and column names are matched case-insensitively. 'included' is one of: To Be Reviewed, Included, Not Included, Not Applicable. 'gated_by' names an intake topic whose Yes/No answer flips the table's inclusion. Intake rows can also use 'gates_classes' (e.g. [\"Audit / History\"]) to gate every table of a classification."
+}

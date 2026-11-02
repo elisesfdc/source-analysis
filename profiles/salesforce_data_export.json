@@ -1,0 +1,27 @@
+{
+  "name": "Salesforce Data Export",
+  "source_system": "Salesforce (Data Export)",
+  "target_system": "Salesforce",
+  "detect": {
+    "tables": ["account", "contact", "user"],
+    "columns": {
+      "account": ["Id", "IsDeleted", "SystemModstamp", "OwnerId"],
+      "contact": ["Id", "IsDeleted", "SystemModstamp", "AccountId"],
+      "user": ["Id", "Username", "ProfileId"]
+    }
+  },
+  "users_table": "user",
+  "null_tokens": ["000000000000000AAA"],
+  "conditional_keys": {
+    "account.personcontactid": {
+      "exempt_when": {
+        "column": "PersonContactId",
+        "populated": true,
+        "label": "person accounts",
+        "other_label": "business accounts"
+      },
+      "note": "An Account is a person account when PersonContactId is populated; that Id is the account's system-managed Contact."
+    }
+  },
+  "_notes": "Auto-applied when an extract has Account, Contact and User tables with Salesforce system columns. Salesforce's Data Export writes 000000000000000AAA into empty lookup fields; it is treated as blank everywhere. Person accounts are identified by a populated Account.PersonContactId."
+}
